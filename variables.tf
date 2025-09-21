@@ -4,6 +4,19 @@ variable "auth0_domain" {
   type        = string
 }
 
+# Custom Domain Configuration
+variable "custom_domain_name" {
+  description = "Custom domain name for Auth0 tenant"
+  type        = string
+  default     = ""
+}
+
+variable "custom_domain_type" {
+  description = "Type of custom domain (auth0_managed_certs or self_managed_certs)"
+  type        = string
+  default     = "auth0_managed_certs"
+}
+
 # Tenant Configuration Variables
 variable "tenant_friendly_name" {
   description = "Friendly name for the Auth0 tenant"
@@ -46,7 +59,42 @@ variable "project_name" {
   default     = "my-app"
 }
 
-# SPA Application Variables
+# Multiple Applications Configuration
+variable "applications" {
+  description = "Configuration for multiple applications"
+  type = map(object({
+    name              = string
+    type              = string  # "spa" or "api"
+    description       = string
+    callbacks         = optional(list(string), [])
+    logout_urls       = optional(list(string), [])
+    allowed_origins   = optional(list(string), [])
+    web_origins       = optional(list(string), [])
+    api_identifier    = optional(string, "")
+    api_scopes        = optional(list(object({
+      name        = string
+      description = string
+    })), [])
+    required_roles    = optional(list(string), [])  # List of roles required for this application
+  }))
+  default = {}
+}
+
+# Role Configuration
+variable "roles" {
+  description = "Configuration for Auth0 roles"
+  type = map(object({
+    name        = string
+    description = string
+    permissions = list(object({
+      resource_server_identifier = string
+      name                      = string
+    }))
+  }))
+  default = {}
+}
+
+# Legacy SPA Application Variables (for backwards compatibility)
 variable "spa_app_name" {
   description = "Name of the SPA application"
   type        = string
@@ -72,16 +120,16 @@ variable "spa_logout_urls" {
 }
 
 # Custom Domain Configuration
-variable "custom_domain_name" {
-  description = "Custom domain name for Auth0 tenant (e.g., auth.yourdomain.com)"
-  type        = string
-}
-
-variable "custom_domain_type" {
-  description = "Type of custom domain verification (auth0_managed_certs or self_managed_certs)"
-  type        = string
-  default     = "auth0_managed_certs"
-}
+#variable "custom_domain_name" {
+#  description = "Custom domain name for Auth0 tenant (e.g., auth.yourdomain.com)"
+#  type        = string
+#}
+#
+#variable "custom_domain_type" {
+#  description = "Type of custom domain verification (auth0_managed_certs or self_managed_certs)"
+#  type        = string
+#  default     = "auth0_managed_certs"
+#}
 
 variable "spa_allowed_origins" {
   description = "Allowed origins for SPA"

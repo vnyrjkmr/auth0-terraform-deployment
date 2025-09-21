@@ -26,21 +26,22 @@ resource "auth0_tenant" "tenant" {
 }
 
 # Custom Domain Configuration
-resource "auth0_custom_domain" "domain" {
-  count  = var.custom_domain_name != "" ? 1 : 0
-  domain = var.custom_domain_name
-  type   = var.custom_domain_type
-}
+#resource "auth0_custom_domain" "domain" {
+#  count  = var.custom_domain_name != "" ? 1 : 0
+#  domain = var.custom_domain_name
+#  type   = var.custom_domain_type
+#}
 
-# Auth0 Application (SPA - Single Page Application)
-resource "auth0_client" "spa_app" {
-  name                = var.spa_app_name
-  description         = "Single Page Application for ${var.project_name}"
-  app_type            = "spa"
-  callbacks           = var.spa_callbacks
-  allowed_logout_urls = var.spa_logout_urls
-  allowed_origins     = var.spa_allowed_origins
-  web_origins         = var.spa_web_origins
+# Multiple Auth0 Applications
+resource "auth0_client" "applications" {
+  for_each = var.applications
+
+  name                = each.value.name
+  description         = each.value.description
+  callbacks           = each.value.type == "spa" ? each.value.callbacks : null
+  allowed_logout_urls = each.value.type == "spa" ? each.value.logout_urls : null
+  allowed_origins     = each.value.type == "spa" ? each.value.allowed_origins : null
+  web_origins         = each.value.type == "spa" ? each.value.web_origins : null
   oidc_conformant     = true
   
   jwt_configuration {
@@ -48,25 +49,72 @@ resource "auth0_client" "spa_app" {
     secret_encoded      = true
     alg                 = "RS256"
   }
-
-  refresh_token {
-    expiration_type = "expiring"
-    leeway          = 0
-    token_lifetime  = 2592000
-    idle_token_lifetime = 1296000
-    infinite_token_lifetime = false
-    infinite_idle_token_lifetime = false
-    rotation_type = "rotating"
-  }
-
-  grant_types = [
-    "authorization_code",
-    "refresh_token"
-  ]
 }
 
-# Auth0 Application (API/Backend)
+# Resource Servers for API Applications
+resource "auth0_resource_server" "apis" {
+  for_each = {
+    for k, v in var.applications : k => v
+    if v.type == "api"
+  }
+
+  name        = each.value.name
+  identifier  = each.value.api_identifier
+  signing_alg = "RS256"
+
+  allow_offline_access = true
+  token_lifetime      = 86400
+  skip_consent_for_verifiable_first_party_clients = true
+}
+
+# API Scopes
+resource "auth0_resource_server_scopes" "api_scopes_new" {
+  for_each = {
+    for k, v in var.applications : k => v
+    if v.type == "api" && length(v.api_scopes) > 0
+  }
+
+  resource_server_identifier = auth0_resource_server.apis[each.key].identifier
+
+  dynamic "scopes" {
+    for_each = each.value.api_scopes
+    content {
+      name        = scopes.value.name
+      description = scopes.value.description
+    }
+  }
+}
+
+# Roles
+resource "auth0_role" "roles" {
+  for_each = var.roles
+
+  name        = each.value.name
+  description = each.value.description
+}
+
+# Role Permissions
+resource "auth0_role_permission" "role_permissions" {
+  for_each = {
+    for entry in flatten([
+      for role_key, role in var.roles : [
+        for permission in role.permissions : {
+          role_key     = role_key
+          resource_server_identifier = permission.resource_server_identifier
+          permission_name = permission.name
+        }
+      ]
+    ]) : "${entry.role_key}-${entry.permission_name}" => entry
+  }
+
+  role_id = auth0_role.roles[each.value.role_key].id
+  resource_server_identifier = each.value.resource_server_identifier
+  permission = each.value.permission_name
+}
+
+# Legacy Auth0 Application (API/Backend) - maintained for backward compatibility
 resource "auth0_client" "api_app" {
+  count       = var.api_app_name != "" ? 1 : 0
   name        = var.api_app_name
   description = "API Application for ${var.project_name}"
   app_type    = "non_interactive"
@@ -76,47 +124,25 @@ resource "auth0_client" "api_app" {
     secret_encoded      = true
     alg                 = "RS256"
   }
-
-  grant_types = [
-    "client_credentials"
-  ]
 }
 
-# Auth0 Resource Server (API)
+# Legacy Auth0 Resource Server (API) - maintained for backward compatibility
 resource "auth0_resource_server" "api" {
+  count = var.api_name != "" ? 1 : 0  # Only create if api_name is provided
+  
   name       = var.api_name
   identifier = var.api_identifier
 
-  allow_offline_access                            = true
-  token_lifetime                                 = 86400
-  token_lifetime_for_web                         = 7200
+  allow_offline_access = true
+  token_lifetime      = 86400
   skip_consent_for_verifiable_first_party_clients = true
-}
-
-# Auth0 Resource Server Scopes
-resource "auth0_resource_server_scopes" "api_scopes" {
-  resource_server_identifier = auth0_resource_server.api.identifier
-  
-  scopes {
-    name        = "read:users"
-    description = "Read user information"
-  }
-  
-  scopes {
-    name        = "write:users"
-    description = "Write user information"
-  }
-  
-  scopes {
-    name        = "admin"
-    description = "Administrator access"
-  }
 }
 
 # Auth0 Client Grant (API permissions)
 resource "auth0_client_grant" "api_grant" {
-  client_id = auth0_client.api_app.id
-  audience  = auth0_resource_server.api.identifier
+  count     = var.api_name != "" ? 1 : 0  # Only create if api_name is provided
+  client_id = auth0_client.api_app[0].id
+  audience  = auth0_resource_server.api[0].identifier
   
   scopes = [
     "read:users",
@@ -153,59 +179,15 @@ resource "auth0_connection" "database" {
   }
 }
 
-# Enable connection for SPA application
-resource "auth0_connection_clients" "spa_connection" {
+# Enable connection for applications
+resource "auth0_connection_clients" "app_connections" {
   connection_id = auth0_connection.database.id
   enabled_clients = [
-    auth0_client.spa_app.id
+    for k, v in auth0_client.applications : v.id if v.app_type == "spa"
   ]
 }
 
-# Auth0 Role - Admin
-resource "auth0_role" "admin" {
-  name        = "Admin"
-  description = "Administrator role with full access"
-}
-
-# Auth0 Role - User
-resource "auth0_role" "user" {
-  name        = "User"
-  description = "Standard user role"
-}
-
-# Auth0 Role Permissions - Admin
-resource "auth0_role_permissions" "admin_permissions" {
-  role_id = auth0_role.admin.id
-  
-  permissions {
-    resource_server_identifier = auth0_resource_server.api.identifier
-    name                      = "admin"
-  }
-  
-  permissions {
-    resource_server_identifier = auth0_resource_server.api.identifier
-    name                      = "read:users"
-  }
-  
-  permissions {
-    resource_server_identifier = auth0_resource_server.api.identifier
-    name                      = "write:users"
-  }
-  
-  depends_on = [auth0_resource_server_scopes.api_scopes]
-}
-
-# Auth0 Role Permissions - User
-resource "auth0_role_permissions" "user_permissions" {
-  role_id = auth0_role.user.id
-  
-  permissions {
-    resource_server_identifier = auth0_resource_server.api.identifier
-    name                      = "read:users"
-  }
-  
-  depends_on = [auth0_resource_server_scopes.api_scopes]
-}
+# Role permissions are now handled by the auth0_role_permission resource with for_each
 
 # Auth0 Action (Login Flow)
 resource "auth0_action" "login_action" {
