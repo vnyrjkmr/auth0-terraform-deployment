@@ -23,12 +23,12 @@ output "resource_servers" {
 # Connection Outputs
 output "database_connection_id" {
   description = "ID of the database connection"
-  value       = auth0_connection.database.id
+  value       = var.skip_existing_database ? null : auth0_connection.database[0].id
 }
 
 output "database_connection_name" {
   description = "Name of the database connection"
-  value       = auth0_connection.database.name
+  value       = var.skip_existing_database ? null : auth0_connection.database[0].name
 }
 
 # Role Outputs

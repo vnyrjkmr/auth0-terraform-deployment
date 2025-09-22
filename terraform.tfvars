@@ -1,8 +1,12 @@
+# Resource Existence Flags
 
-# Example terraform.tfvars file
-# Copy this file to terraform.tfvars and fill in your actual values
+skip_existing_applications      = true# Example terraform.tfvars file
 
-# Auth0 Management API Configuration
+skip_existing_resource_servers = true# Copy this file to terraform.tfvars and fill in your actual values
+
+skip_existing_database        = true
+
+skip_existing_action          = true# Auth0 Management API Configuration
 # You can find these values in your Auth0 Dashboard > Applications > Machine to Machine Applications
 auth0_domain        = "dev-ttiw0oehq6nnv2jk.us.auth0.com"
 auth0_client_id     = "oKs0PcU5MhzDnKQqalf1xQKYLE4YsCOK"

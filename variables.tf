@@ -4,6 +4,31 @@ variable "auth0_domain" {
   type        = string
 }
 
+# Resource Existence Flags
+variable "skip_existing_applications" {
+  description = "Whether to skip creating applications that already exist"
+  type        = bool
+  default     = true
+}
+
+variable "skip_existing_resource_servers" {
+  description = "Whether to skip creating resource servers that already exist"
+  type        = bool
+  default     = true
+}
+
+variable "skip_existing_database" {
+  description = "Whether to skip creating database connection that already exists"
+  type        = bool
+  default     = true
+}
+
+variable "skip_existing_action" {
+  description = "Whether to skip creating action that already exists"
+  type        = bool
+  default     = true
+}
+
 # Custom Domain Configuration
 variable "custom_domain_name" {
   description = "Custom domain name for Auth0 tenant"

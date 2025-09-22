@@ -32,12 +32,14 @@ resource "auth0_tenant" "tenant" {
 #  type   = var.custom_domain_type
 #}
 
+
 # Multiple Auth0 Applications
 resource "auth0_client" "applications" {
-  for_each = var.applications
+  for_each = var.skip_existing_applications ? {} : var.applications
 
   name                = each.value.name
   description         = each.value.description
+  app_type            = each.value.type == "spa" ? "spa" : "non_interactive"
   callbacks           = each.value.type == "spa" ? each.value.callbacks : null
   allowed_logout_urls = each.value.type == "spa" ? each.value.logout_urls : null
   allowed_origins     = each.value.type == "spa" ? each.value.allowed_origins : null
@@ -53,7 +55,7 @@ resource "auth0_client" "applications" {
 
 # Resource Servers for API Applications
 resource "auth0_resource_server" "apis" {
-  for_each = {
+  for_each = var.skip_existing_resource_servers ? {} : {
     for k, v in var.applications : k => v
     if v.type == "api"
   }
@@ -65,11 +67,23 @@ resource "auth0_resource_server" "apis" {
   allow_offline_access = true
   token_lifetime      = 86400
   skip_consent_for_verifiable_first_party_clients = true
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      identifier,
+      name,
+      signing_alg,
+      allow_offline_access,
+      token_lifetime,
+      skip_consent_for_verifiable_first_party_clients
+    ]
+  }
 }
 
 # API Scopes
 resource "auth0_resource_server_scopes" "api_scopes_new" {
-  for_each = {
+  for_each = var.skip_existing_resource_servers ? {} : {
     for k, v in var.applications : k => v
     if v.type == "api" && length(v.api_scopes) > 0
   }
@@ -114,7 +128,7 @@ resource "auth0_role_permission" "role_permissions" {
 
 # Legacy Auth0 Application (API/Backend) - maintained for backward compatibility
 resource "auth0_client" "api_app" {
-  count       = var.api_app_name != "" ? 1 : 0
+  count       = (var.api_app_name != "" && !var.skip_existing_applications) ? 1 : 0
   name        = var.api_app_name
   description = "API Application for ${var.project_name}"
   app_type    = "non_interactive"
@@ -128,7 +142,7 @@ resource "auth0_client" "api_app" {
 
 # Legacy Auth0 Resource Server (API) - maintained for backward compatibility
 resource "auth0_resource_server" "api" {
-  count = var.api_name != "" ? 1 : 0  # Only create if api_name is provided
+  count = (var.api_name != "" && !var.skip_existing_resource_servers) ? 1 : 0
   
   name       = var.api_name
   identifier = var.api_identifier
@@ -136,13 +150,24 @@ resource "auth0_resource_server" "api" {
   allow_offline_access = true
   token_lifetime      = 86400
   skip_consent_for_verifiable_first_party_clients = true
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [
+      identifier,
+      name,
+      allow_offline_access,
+      token_lifetime,
+      skip_consent_for_verifiable_first_party_clients
+    ]
+  }
 }
 
 # Auth0 Client Grant (API permissions)
 resource "auth0_client_grant" "api_grant" {
-  count     = var.api_name != "" ? 1 : 0  # Only create if api_name is provided
-  client_id = auth0_client.api_app[0].id
-  audience  = auth0_resource_server.api[0].identifier
+  count     = (var.api_name != "" && !var.skip_existing_applications && !var.skip_existing_resource_servers) ? 1 : 0
+  client_id = length(auth0_client.api_app) > 0 ? auth0_client.api_app[0].id : ""
+  audience  = length(auth0_resource_server.api) > 0 ? auth0_resource_server.api[0].identifier : ""
   
   scopes = [
     "read:users",
@@ -152,6 +177,7 @@ resource "auth0_client_grant" "api_grant" {
 
 # Auth0 Connection (Database)
 resource "auth0_connection" "database" {
+  count    = var.skip_existing_database ? 0 : 1
   name     = replace(lower("${var.project_name}-db"), " ", "-")
   strategy = "auth0"
   
@@ -181,7 +207,8 @@ resource "auth0_connection" "database" {
 
 # Enable connection for applications
 resource "auth0_connection_clients" "app_connections" {
-  connection_id = auth0_connection.database.id
+  count         = var.skip_existing_database ? 0 : 1
+  connection_id = auth0_connection.database[0].id
   enabled_clients = [
     for k, v in auth0_client.applications : v.id if v.app_type == "spa"
   ]
@@ -189,13 +216,28 @@ resource "auth0_connection_clients" "app_connections" {
 
 # Role permissions are now handled by the auth0_role_permission resource with for_each
 
+# Data source to check if login action exists
+data "auth0_action" "existing_action" {
+  name = "add-user-metadata"
+}
+
+locals {
+  existing_login_action = data.auth0_action.existing_action.id != ""
+}
+
 # Auth0 Action (Login Flow)
 resource "auth0_action" "login_action" {
-  name = "add-user-metadata"
+  count = (!local.existing_login_action && !var.skip_existing_action) ? 1 : 0
+  name  = "add-user-metadata"
   
   supported_triggers {
     id      = "post-login"
     version = "v3"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = all
   }
   
   code = <<-EOT

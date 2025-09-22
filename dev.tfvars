@@ -3,48 +3,21 @@ auth0_domain        = "dev-ttiw0oehq6nnv2jk.us.auth0.com"
 auth0_client_id     = "oKs0PcU5MhzDnKQqalf1xQKYLE4YsCOK"
 auth0_client_secret = "M5aaGAZTJG4-tD7rMQMBECk9TWUHDrAMG0wCRFyFvYqOoIskj7juIdtj5BBUDpdB"
 
-project_name = "my-app-dev-1"
+project_name = "my-app-dev"
+
+# Resource Creation Control
+skip_existing_applications      = false  # Set to false to create new applications
+skip_existing_resource_servers = false  # Set to false to create new resource servers
+skip_existing_database        = false  # Set to false to create new database connections
+skip_existing_action          = false  # Set to false to create new actions
 
 # Tenant Configuration
 tenant_friendly_name = "ITCyberSecSol"
 tenant_support_email = "support@ITCyberSecSol.com"
 #custom_domain_name = "auth.ITCyberSecSol.com"
 
-# Role definitions
-roles = {
-  admin = {
-    name        = "Administrator"
-    description = "Full system administrator access"
-    permissions = [
-      {
-        resource_server_identifier = "https://api.itcybersecsol.com"
-        name                      = "read:users"
-      },
-      {
-        resource_server_identifier = "https://api.itcybersecsol.com"
-        name                      = "write:users"
-      },
-      {
-        resource_server_identifier = "https://admin-api.itcybersecsol.com"
-        name                      = "read:admin"
-      },
-      {
-        resource_server_identifier = "https://admin-api.itcybersecsol.com"
-        name                      = "write:admin"
-      }
-    ]
-  },
-  user = {
-    name        = "Standard User"
-    description = "Regular user access"
-    permissions = [
-      {
-        resource_server_identifier = "https://api.itcybersecsol.com"
-        name                      = "read:users"
-      }
-    ]
-  }
-}
+
+
 
 # Application definitions
 applications = {
@@ -90,11 +63,32 @@ applications = {
       "https://admin.itcybersecsol.com"
     ]
   },
+  admin_test_app = {
+    name        = "ITCyberSecSol Admin test app"
+    type        = "spa"
+    description = "Administrative dashboard application"
+    callbacks   = [
+      "http://localhost:5001/callback",
+      "https://admin.itcybersecsol1.com/callback"
+    ]
+    logout_urls = [
+      "http://localhost:5001",
+      "https://admin.itcybersecsol1.com"
+    ]
+    allowed_origins = [
+      "http://localhost:5001",
+      "https://admin.itcybersecsol1.com"
+    ]
+    web_origins = [
+      "http://localhost:5001",
+      "https://admin.itcybersecsol1.com"
+    ]
+  },
   main_api = {
     name         = "ITCyberSecSol Main API"
     type         = "api"
     description  = "Main backend API service"
-    api_identifier = "https://api.itcybersecsol.com"
+    api_identifier = "https://api.itcybersecsol2.com"
     api_scopes   = [
       {
         name        = "read:users"
@@ -110,7 +104,7 @@ applications = {
     name         = "ITCyberSecSol Admin API"
     type         = "api"
     description  = "Administrative API service"
-    api_identifier = "https://admin-api.itcybersecsol.com"
+    api_identifier = "https://admin-api.itcybersecsol2.com"
     api_scopes   = [
       {
         name        = "read:admin"
@@ -126,7 +120,7 @@ applications = {
 
 api_app_name = "ITCyberSecSol_APITestapp"
 api_name     = "ITCyberSecSol_APITestapp"
-api_identifier = "https://api-dev.example.com"
+api_identifier = "https://api-dev.example2.com"
 
 environment = "dev"
 
