@@ -21,6 +21,27 @@ tenant_support_email = "support@ITCyberSecSol.com"
 
 # Application definitions
 applications = {
+   main_app_new = {
+    name        = "ITCyberSecSol Main App New app"
+    type        = "spa"
+    description = "Main customer portal application New app"
+    callbacks   = [
+      "http://localhost:3000/callback",
+      "https://main.itcybersecsol.com/callback"
+    ]
+    logout_urls = [
+      "http://localhost:3000",
+      "https://main.itcybersecsol.com"
+    ]
+    allowed_origins = [
+      "http://localhost:3000",
+      "https://main.itcybersecsol.com"
+    ]
+    web_origins = [
+      "http://localhost:3000",
+      "https://main.itcybersecsol.com"
+    ]
+  },
   main_app = {
     name        = "ITCyberSecSol Main App"
     type        = "spa"
@@ -124,3 +145,4 @@ api_identifier = "https://api-dev.example2.com"
 
 environment = "dev"
 
+primary_color = "#1A1A1A"

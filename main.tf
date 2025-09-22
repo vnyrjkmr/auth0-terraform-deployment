@@ -31,7 +31,30 @@ resource "auth0_tenant" "tenant" {
 #  domain = var.custom_domain_name
 #  type   = var.custom_domain_type
 #}
+# Attack Protection
+resource "auth0_attack_protection" "breached_password_detection" {
+  breached_password_detection {
+    enabled                = true
+    shields                = ["block", "admin_notification"]
+    admin_notification_frequency = ["daily"]
+  }
+  brute_force_protection {
+    enabled      = true
+    shields      = ["block"]
+  }
+  suspicious_ip_throttling {
+    enabled      = true
+    shields      = ["admin_notification", "block"]
+  }
+}
 
+# Branding
+resource "auth0_branding" "main" {
+  logo_url = var.logo_url
+  colors {
+    primary         = var.primary_color 
+  }
+}
 
 # Multiple Auth0 Applications
 resource "auth0_client" "applications" {

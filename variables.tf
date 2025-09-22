@@ -1,3 +1,24 @@
+
+
+# Branding Variables
+variable "logo_url" {
+  description = "Logo URL for Auth0 branding"
+  type        = string
+  default     = null
+}
+
+variable "primary_color" {
+  description = "Primary color for Auth0 branding"
+  type        = string
+  default     = "#271957"
+}
+
+variable "page_background_color" {
+  description = "Background color for Auth0 pages"
+  type        = string
+  default     = "f4f4f4"  # without # prefix
+}
+
 # Auth0 Configuration Variables
 variable "auth0_domain" {
   description = "Auth0 tenant domain"
@@ -200,7 +221,6 @@ variable "database_connection_name" {
   type        = string
   default     = "Username-Password-Authentication"
 }
-
 # Environment Variables
 variable "environment" {
   description = "Environment name (dev, staging, prod)"
