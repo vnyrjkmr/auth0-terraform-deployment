@@ -33,11 +33,11 @@ resource "auth0_tenant" "tenant" {
 #}
 # Attack Protection
 resource "auth0_attack_protection" "breached_password_detection" {
-  breached_password_detection {
-    enabled                = true
-    shields                = ["block", "admin_notification"]
-    admin_notification_frequency = ["daily"]
-  }
+ # breached_password_detection {
+  #  enabled                = true
+   # shields                = ["block", "admin_notification"]
+   # admin_notification_frequency = ["daily"]
+  #}
   brute_force_protection {
     enabled      = true
     shields      = ["block"]
@@ -92,7 +92,6 @@ resource "auth0_resource_server" "apis" {
   skip_consent_for_verifiable_first_party_clients = true
 
   lifecycle {
-    prevent_destroy = true
     ignore_changes = [
       identifier,
       name,
@@ -175,7 +174,6 @@ resource "auth0_resource_server" "api" {
   skip_consent_for_verifiable_first_party_clients = true
 
   lifecycle {
-    prevent_destroy = true
     ignore_changes = [
       identifier,
       name,

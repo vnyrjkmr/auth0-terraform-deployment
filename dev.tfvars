@@ -145,4 +145,4 @@ api_identifier = "https://api-dev.example2.com"
 
 environment = "dev"
 
-primary_color = "#1A1A1A"
+primary_color = "#af0ed7"
