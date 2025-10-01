@@ -45,6 +45,13 @@ env:
   TF_IN_AUTOMATION: true
   TF_INPUT: false
 
+# Grant necessary permissions for the workflow
+permissions:
+  contents: write      # Required for creating tags and releases
+  actions: read        # Required for downloading artifacts
+  checks: read         # Required for status checks
+  pull-requests: write # Required for PR comments
+
 jobs:
   # Determine deployment strategy based on branch/tag/trigger
   determine-strategy:
