@@ -21,9 +21,9 @@ tenant_support_email = "support@ITCyberSecSol.com"
 # Application definitions
 applications = {
   main_app_new = {
-    name        = "ITCyberSecSol Main App New app"
+    name        = "ITCyberSecSol Main App New app 1"
     type        = "spa"
-    description = "Main customer portal application New app"
+    description = "Main customer portal application New app 1"
     callbacks   = [
       "http://localhost:3000/callback",
       "https://main.itcybersecsol.com/callback"
