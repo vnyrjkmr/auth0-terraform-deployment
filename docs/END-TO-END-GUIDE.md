@@ -145,7 +145,7 @@ gh auth status
 
 # Validate Terraform
 terraform validate
-terraform plan -var-file="dev.tfvars"
+terraform plan -var-file="config/dev.tfvars"
 
 # Check git branches
 git branch -a

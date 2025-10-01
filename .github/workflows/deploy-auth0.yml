@@ -76,8 +76,8 @@ jobs:
           
           # Default values
           ENVIRONMENT="development"
-          TENANT="development" 
-          TF_VARS_FILE="dev.tfvars"
+          TENANT="dev" 
+          TF_VARS_FILE="config/dev.tfvars"
           SHOULD_DEPLOY="false"
           DEPLOYMENT_TYPE="feature"
           CREATE_TAG="false"
@@ -91,24 +91,32 @@ jobs:
             
             case "$ENVIRONMENT" in
               "development")
-                TENANT="development"
-                TF_VARS_FILE="dev.tfvars"
+                TENANT="dev"
+                TF_VARS_FILE="config/dev.tfvars"
                 ;;
               "staging")
                 TENANT="staging"
-                TF_VARS_FILE="qa.tfvars"
+                TF_VARS_FILE="config/qa.tfvars"
                 ;;
               "production")
                 TENANT="production"
-                TF_VARS_FILE="prod.tfvars"
+                TF_VARS_FILE="config/prod.tfvars"
                 ;;
             esac
           
+          # Tag-based deployments (Staging)
+          elif [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.*-staging$ ]]; then
+            ENVIRONMENT="staging"
+            TENANT="staging"
+            TF_VARS_FILE="config/qa.tfvars"
+            SHOULD_DEPLOY="true"
+            DEPLOYMENT_TYPE="staging"
+            
           # Tag-based deployments (Production)
           elif [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+(\.[0-9]+)?(-.*)?$ ]]; then
             ENVIRONMENT="production"
-            TENANT="production"
-            TF_VARS_FILE="prod.tfvars"
+            TENANT="prod"
+            TF_VARS_FILE="config/prod.tfvars"
             SHOULD_DEPLOY="true"
             DEPLOYMENT_TYPE="release"
             
@@ -117,37 +125,37 @@ jobs:
             case "${{ github.ref_name }}" in
               "main"|"master")
                 ENVIRONMENT="production"
-                TENANT="production"
-                TF_VARS_FILE="prod.tfvars"
+                TENANT="prod"
+                TF_VARS_FILE="config/prod.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="production"
                 CREATE_TAG="true"
                 ;;
               "development")
                 ENVIRONMENT="development"
-                TENANT="development"
-                TF_VARS_FILE="dev.tfvars"
+                TENANT="dev"
+                TF_VARS_FILE="config/dev.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="development"
                 ;;
               hotfix/*)
                 ENVIRONMENT="staging"
                 TENANT="staging"
-                TF_VARS_FILE="qa.tfvars"
+                TF_VARS_FILE="config/qa.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="hotfix"
                 ;;
               release/*)
                 ENVIRONMENT="staging"
                 TENANT="staging"
-                TF_VARS_FILE="qa.tfvars"
+                TF_VARS_FILE="config/qa.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="release"
                 ;;
               feature/*)
                 ENVIRONMENT="development"
-                TENANT="development"
-                TF_VARS_FILE="dev.tfvars"
+                TENANT="dev"
+                TF_VARS_FILE="config/dev.tfvars"
                 SHOULD_DEPLOY="false"
                 DEPLOYMENT_TYPE="feature"
                 ;;
@@ -158,18 +166,18 @@ jobs:
             case "${{ github.base_ref }}" in
               "main"|"master")
                 ENVIRONMENT="production"
-                TENANT="production"
-                TF_VARS_FILE="prod.tfvars"
+                TENANT="prod"
+                TF_VARS_FILE="config/prod.tfvars"
                 ;;
               "development")
                 ENVIRONMENT="development"
-                TENANT="development"
-                TF_VARS_FILE="dev.tfvars"
+                TENANT="dev"
+                TF_VARS_FILE="config/dev.tfvars"
                 ;;
               *)
                 ENVIRONMENT="staging"
                 TENANT="staging"
-                TF_VARS_FILE="qa.tfvars"
+                TF_VARS_FILE="config/qa.tfvars"
                 ;;
             esac
             SHOULD_DEPLOY="false"

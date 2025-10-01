@@ -70,9 +70,9 @@ Write-Step "Validating Current Setup"
 # Check required files
 $requiredFiles = @{
     ".github/workflows/deploy-auth0.yml" = "GitHub Actions workflow"
-    "dev.tfvars" = "Development environment variables"
-    "qa.tfvars" = "Staging environment variables"
-    "prod.tfvars" = "Production environment variables"
+    "config/dev.tfvars" = "Development environment variables"
+    "config/qa.tfvars" = "Staging environment variables"
+    "config/prod.tfvars" = "Production environment variables"
     "main.tf" = "Terraform main configuration"
     "variables.tf" = "Terraform variables"
 }

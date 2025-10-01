@@ -12,7 +12,7 @@ Write-Host "Issue: Action 'add-user-metadata' not found during deployment" -Fore
 Write-Host "`n📋 Changes Applied:" -ForegroundColor Green
 Write-Host "✅ Removed problematic data source for non-existent action" -ForegroundColor White
 Write-Host "✅ Updated logic to use skip_existing_action variable" -ForegroundColor White  
-Write-Host "✅ Set skip_existing_action = true in dev.tfvars" -ForegroundColor White
+Write-Host "✅ Set skip_existing_action = true in config/dev.tfvars" -ForegroundColor White
 
 if ($TestPlan) {
     Write-Host "`n🧪 Testing Terraform Plan..." -ForegroundColor Cyan
@@ -27,7 +27,7 @@ if ($TestPlan) {
             Write-Host "✅ Configuration is valid" -ForegroundColor Green
             
             Write-Host "`nRunning plan for development environment..." -ForegroundColor Cyan
-            terraform plan -var-file="dev.tfvars"
+            terraform plan -var-file="config/dev.tfvars"
             
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "✅ Plan completed successfully - Action error should be resolved!" -ForegroundColor Green
@@ -45,12 +45,12 @@ if ($TestPlan) {
 if ($CommitChanges) {
     Write-Host "`n📦 Committing Changes..." -ForegroundColor Cyan
     
-    git add main.tf dev.tfvars
+    git add main.tf config/dev.tfvars
     git commit -m "fix: resolve Auth0 action 'add-user-metadata' not found error
 
 - Remove problematic data source lookup for non-existent action
 - Update action creation logic to use skip_existing_action variable
-- Set skip_existing_action = true in dev.tfvars to prevent errors
+- Set skip_existing_action = true in config/dev.tfvars to prevent errors
 - This allows deployment to proceed without action-related failures"
 
     if ($LASTEXITCODE -eq 0) {
@@ -83,6 +83,6 @@ Write-Host "4. Optional: Set skip_existing_action = false later to create action
 
 Write-Host "`n💡 Alternative Approach:" -ForegroundColor Yellow
 Write-Host "If you want to create the action, you can:" -ForegroundColor White
-Write-Host "• Set skip_existing_action = false in dev.tfvars" -ForegroundColor Gray
+Write-Host "• Set skip_existing_action = false in config/dev.tfvars" -ForegroundColor Gray
 Write-Host "• The action will be created during the next deployment" -ForegroundColor Gray
 Write-Host "• This adds user metadata to login flows automatically" -ForegroundColor Gray
