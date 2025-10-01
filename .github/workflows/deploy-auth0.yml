@@ -69,7 +69,7 @@ jobs:
           
           # Default values
           ENVIRONMENT="development"
-          TENANT="development" 
+          TENANT="dev" 
           TF_VARS_FILE="config/dev.tfvars"
           SHOULD_DEPLOY="false"
           DEPLOYMENT_TYPE="feature"
@@ -84,7 +84,7 @@ jobs:
             
             case "$ENVIRONMENT" in
               "development")
-                TENANT="development"
+                TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
                 ;;
               "staging")
@@ -118,7 +118,7 @@ jobs:
                 ;;
               "development")
                 ENVIRONMENT="development"
-                TENANT="development"
+                TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="development"
@@ -139,7 +139,7 @@ jobs:
                 ;;
               feature/*)
                 ENVIRONMENT="development"
-                TENANT="development"
+                TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
                 SHOULD_DEPLOY="false"
                 DEPLOYMENT_TYPE="feature"
@@ -156,7 +156,7 @@ jobs:
                 ;;
               "development")
                 ENVIRONMENT="development"
-                TENANT="development"
+                TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
                 ;;
               *)
