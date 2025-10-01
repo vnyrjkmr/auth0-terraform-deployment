@@ -9,6 +9,8 @@ terraform {
   required_version = ">= 1.0"
 }
 
+
+
 # Configure Auth0 Provider
 provider "auth0" {
   domain        = var.auth0_domain
