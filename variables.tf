@@ -199,14 +199,14 @@ variable "spa_web_origins" {
 variable "api_app_name" {
   description = "Name of the API application"
   type        = string
-  default     = "My API App"
+  default     = ""
 }
 
 # Resource Server Variables
 variable "api_name" {
   description = "Name of the API resource server"
   type        = string
-  default     = "My API"
+  default     = ""
 }
 
 variable "api_identifier" {
