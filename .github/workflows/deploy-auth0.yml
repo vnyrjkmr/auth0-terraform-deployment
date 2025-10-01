@@ -97,6 +97,14 @@ jobs:
                 ;;
             esac
           
+          # Tag-based deployments (Staging)
+          elif [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.*-staging$ ]]; then
+            ENVIRONMENT="staging"
+            TENANT="staging"
+            TF_VARS_FILE="config/qa.tfvars"
+            SHOULD_DEPLOY="true"
+            DEPLOYMENT_TYPE="staging"
+            
           # Tag-based deployments (Production)
           elif [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+(\.[0-9]+)?(-.*)?$ ]]; then
             ENVIRONMENT="production"
