@@ -5,7 +5,7 @@ This repository contains Terraform infrastructure as code for managing Auth0 ten
 ## 📁 Repository Structure
 
 ```
-├── config/                    # Environment configuration files
+├── config/                   # Environment configuration files
 │   ├── dev.tfvars            # Development environment variables
 │   ├── qa.tfvars             # Staging environment variables
 │   ├── prod.tfvars           # Production environment variables
