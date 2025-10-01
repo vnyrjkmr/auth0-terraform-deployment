@@ -1,7 +1,6 @@
 # Production environment - MINIMAL CONFIG
-auth0_domain        = "dev-ttiw0oehq6nnv2jk.us.auth0.com"  # Update with your production Auth0 tenant
-auth0_client_id     = "oKs0PcU5MhzDnKQqalf1xQKYLE4YsCOK"  # Production Management API credentials
-auth0_client_secret = "M5aaGAZTJG4-tD7rMQMBECk9TWUHDrAMG0wCRFyFvYqOoIskj7juIdtj5BBUDpdB"
+# Auth0 credentials are now managed via GitHub Secrets for security
+# The workflow will inject these values during deployment
 
 project_name = "my-app-production-minimal"
 

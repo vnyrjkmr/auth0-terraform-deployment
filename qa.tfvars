@@ -1,7 +1,6 @@
 # Quality Assurance (QA/Staging) environment - MINIMAL CONFIG
-auth0_domain        = "dev-3ey3z12ipauxwzup.us.auth0.com"  # Using same tenant as dev for testing
-auth0_client_id     = "ZNA0WDKKxRUuiaZzQtS06P4ksrKCP3yu"  # Same Management API credentials
-auth0_client_secret = "IBWzaVffwmwHerh6HT77q7YJnmsOwBGonU22vd-ga6QyT4-Wnc_hRj1emTWvBOeZ"
+# Auth0 credentials are now managed via GitHub Secrets for security
+# The workflow will inject these values during deployment
 
 project_name = "my-app-staging-minimal"
 
