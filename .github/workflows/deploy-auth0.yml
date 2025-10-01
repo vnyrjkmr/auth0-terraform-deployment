@@ -264,7 +264,7 @@ jobs:
         run: |
           set +e
           echo "📋 Running Terraform plan for ${{ needs.determine-strategy.outputs.deployment_type }} deployment..."
-          terraform plan -var-file="${{ needs.determine-strategy.outputs.tf_vars_file }}" -var="environment=${{ needs.determine-strategy.outputs.tenant }}" -out=tfplan -detailed-exitcode
+          terraform plan -var-file="${{ needs.determine-strategy.outputs.tf_vars_file }}" -out=tfplan -detailed-exitcode
           PLAN_EXIT_CODE=$?
           echo "exitcode=$PLAN_EXIT_CODE" >> $GITHUB_OUTPUT
           
