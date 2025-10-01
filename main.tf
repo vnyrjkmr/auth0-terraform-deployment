@@ -25,6 +25,8 @@ resource "auth0_tenant" "tenant" {
   default_directory  = "Username-Password-Authentication"
 }
 
+
+
 # Custom Domain Configuration
 #resource "auth0_custom_domain" "domain" {
 #  count  = var.custom_domain_name != "" ? 1 : 0
