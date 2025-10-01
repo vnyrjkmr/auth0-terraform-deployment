@@ -100,7 +100,7 @@ jobs:
           # Tag-based deployments (Production)
           elif [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+(\.[0-9]+)?(-.*)?$ ]]; then
             ENVIRONMENT="production"
-            TENANT="production"
+            TENANT="prod"
             TF_VARS_FILE="config/prod.tfvars"
             SHOULD_DEPLOY="true"
             DEPLOYMENT_TYPE="release"
@@ -110,7 +110,7 @@ jobs:
             case "${{ github.ref_name }}" in
               "main"|"master")
                 ENVIRONMENT="production"
-                TENANT="production"
+                TENANT="prod"
                 TF_VARS_FILE="config/prod.tfvars"
                 SHOULD_DEPLOY="true"
                 DEPLOYMENT_TYPE="production"
@@ -151,7 +151,7 @@ jobs:
             case "${{ github.base_ref }}" in
               "main"|"master")
                 ENVIRONMENT="production"
-                TENANT="production"
+                TENANT="prod"
                 TF_VARS_FILE="config/prod.tfvars"
                 ;;
               "development")
@@ -264,7 +264,7 @@ jobs:
         run: |
           set +e
           echo "📋 Running Terraform plan for ${{ needs.determine-strategy.outputs.deployment_type }} deployment..."
-          terraform plan -var-file="${{ needs.determine-strategy.outputs.tf_vars_file }}" -out=tfplan -detailed-exitcode
+          terraform plan -var-file="${{ needs.determine-strategy.outputs.tf_vars_file }}" -var="environment=${{ needs.determine-strategy.outputs.tenant }}" -out=tfplan -detailed-exitcode
           PLAN_EXIT_CODE=$?
           echo "exitcode=$PLAN_EXIT_CODE" >> $GITHUB_OUTPUT
           
