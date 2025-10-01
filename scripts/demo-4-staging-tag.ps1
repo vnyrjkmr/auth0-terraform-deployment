@@ -13,7 +13,7 @@ Write-Host "✅ On development branch, ready for staging tag creation" -Foregrou
 # Step 2: Create staging release content
 Write-Host "`n📍 Step 2: Prepare staging release candidate" -ForegroundColor Yellow
 $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-$stagingVersion = "v5.$(Get-Date -Format 'M')-staging"
+$stagingVersion = "v5.$(Get-Date -Format 'ss')-staging"
 $filename = "STAGING-RELEASE-$stagingVersion-$(Get-Date -Format 'yyyyMMdd-HHmmss').md"
 
 $stagingContent = @"
