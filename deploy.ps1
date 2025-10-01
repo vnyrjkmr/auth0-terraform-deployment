@@ -1,4 +1,5 @@
 param(
+    [ValidateSet("dev", "qa", "prod")]
     [string]$Environment = "dev"
 )
 

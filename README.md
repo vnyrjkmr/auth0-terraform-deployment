@@ -2,6 +2,8 @@
 
 This Terraform project manages Auth0 infrastructure including applications, resource servers, roles, and connections.
 
+
+
 ## Prerequisites
 
 1. **Terraform**: Install Terraform >= 1.0

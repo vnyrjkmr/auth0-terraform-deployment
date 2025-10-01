@@ -3,6 +3,8 @@ auth0_domain        = "dev-ttiw0oehq6nnv2jk.us.auth0.com"
 auth0_client_id     = "oKs0PcU5MhzDnKQqalf1xQKYLE4YsCOK"
 auth0_client_secret = "M5aaGAZTJG4-tD7rMQMBECk9TWUHDrAMG0wCRFyFvYqOoIskj7juIdtj5BBUDpdB"
 
+
+
 project_name = "cdw-prd-first-terraform-project"
 
 spa_app_name = "My CDW PRD Account (Production)"

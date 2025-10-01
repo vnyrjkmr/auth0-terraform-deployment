@@ -1,9 +1,11 @@
 # Development environment
-auth0_domain        = "dev-ttiw0oehq6nnv2jk.us.auth0.com"
-auth0_client_id     = "oKs0PcU5MhzDnKQqalf1xQKYLE4YsCOK"
-auth0_client_secret = "M5aaGAZTJG4-tD7rMQMBECk9TWUHDrAMG0wCRFyFvYqOoIskj7juIdtj5BBUDpdB"
+auth0_domain        = "dev-3ey3z12ipauxwzup.us.auth0.com"
+auth0_client_id     = "ZNA0WDKKxRUuiaZzQtS06P4ksrKCP3yu"
+auth0_client_secret = "IBWzaVffwmwHerh6HT77q7YJnmsOwBGonU22vd-ga6QyT4-Wnc_hRj1emTWvBOeZ"
 
-project_name = "my-app-dev"
+
+
+project_name = "my-app-dev-new"
 
 # Resource Creation Control
 skip_existing_applications      = false  # Set to false to create new applications
@@ -16,12 +18,9 @@ tenant_friendly_name = "ITCyberSecSol"
 tenant_support_email = "support@ITCyberSecSol.com"
 #custom_domain_name = "auth.ITCyberSecSol.com"
 
-
-
-
 # Application definitions
 applications = {
-   main_app_new = {
+  main_app_new = {
     name        = "ITCyberSecSol Main App New app"
     type        = "spa"
     description = "Main customer portal application New app"
