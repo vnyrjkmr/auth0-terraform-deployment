@@ -18,5 +18,5 @@ tenant_support_email = "support@ITCyberSecSol.com"
 # Empty applications to skip all app creation
 applications = {}
 
-environment = "production"
+environment = "prod"
 primary_color = "#cc0000"
