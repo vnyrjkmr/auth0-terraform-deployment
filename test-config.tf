@@ -4,7 +4,21 @@
 # Date: 2025-10-01
 # Purpose: Validate GitHub Actions workflow deployment
 
-# Test configuration - updating tenant friendly name for demo
-test_deployment = true
-deployment_date = "2025-10-01"
-pipeline_version = "1.0.0"
+# Test variables - these will be ignored but validate syntax
+variable "test_deployment" {
+  description = "Flag to indicate test deployment"
+  type        = bool
+  default     = true
+}
+
+variable "deployment_date" {
+  description = "Date of deployment for testing"
+  type        = string
+  default     = "2025-10-01"
+}
+
+variable "pipeline_version" {
+  description = "Pipeline version for testing"
+  type        = string
+  default     = "1.0.0"
+}

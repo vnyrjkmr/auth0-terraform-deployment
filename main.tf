@@ -239,18 +239,14 @@ resource "auth0_connection_clients" "app_connections" {
 
 # Role permissions are now handled by the auth0_role_permission resource with for_each
 
-# Data source to check if login action exists
-data "auth0_action" "existing_action" {
-  name = "add-user-metadata"
-}
-
+# Check if we should skip creating actions based on variable
 locals {
-  existing_login_action = data.auth0_action.existing_action.id != ""
+  skip_action_creation = var.skip_existing_action
 }
 
 # Auth0 Action (Login Flow)
 resource "auth0_action" "login_action" {
-  count = (!local.existing_login_action && !var.skip_existing_action) ? 1 : 0
+  count = !local.skip_action_creation ? 1 : 0
   name  = "add-user-metadata"
   
   supported_triggers {

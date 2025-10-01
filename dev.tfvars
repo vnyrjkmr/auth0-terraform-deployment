@@ -11,7 +11,7 @@ project_name = "my-app-dev-new"
 skip_existing_applications      = false  # Set to false to create new applications
 skip_existing_resource_servers = false  # Set to false to create new resource servers
 skip_existing_database        = false  # Set to false to create new database connections
-skip_existing_action          = false  # Set to false to create new actions
+skip_existing_action          = true   # Set to true to skip actions that might not exist yet
 
 # Tenant Configuration
 tenant_friendly_name = "ITCyberSecSol"
