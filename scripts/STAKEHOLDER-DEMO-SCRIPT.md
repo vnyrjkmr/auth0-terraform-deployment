@@ -25,7 +25,7 @@ echo "New authentication improvements" >> "dev-update-$(Get-Date -Format 'yyyyMM
 
 # Commit and push - triggers development deployment
 git add .
-git commit -m "feat: Development authentication improvements"
+git commit -m "just dev: Development authentication improvements"
 git push origin development
 ```
 
