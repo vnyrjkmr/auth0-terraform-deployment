@@ -44,7 +44,7 @@ git push origin development
 # Create feature branch from development
 git checkout development
 git pull origin development
-git checkout -b "feature/user-profile-$(Get-Date -Format 'HHmm')"
+git checkout -b "feature/user-profile-$(Get-Date -Format 'HH')"
 
 # Develop feature
 echo "# Feature: Enhanced User Profile - $(Get-Date)" > "feature-profile-$(Get-Date -Format 'yyyyMMdd-HHmmss').md"
@@ -60,18 +60,18 @@ git commit -m "feat: Enhanced user profile management
 - Better user experience"
 
 # Push feature branch
-git push origin "feature/user-profile-$(Get-Date -Format 'HHmm')"
+git push origin "feature/user-profile-$(Get-Date -Format 'HH')"
 
 # Merge to development (simulates approved PR)
 git checkout development
-git merge "feature/user-profile-$(Get-Date -Format 'HHmm')" --no-ff -m "Merge: Enhanced user profile feature"
+git merge "feature/user-profile-$(Get-Date -Format 'HH')" --no-ff -m "Merge: Enhanced user profile feature"
 
 # Push merged changes - triggers development deployment
 git push origin development
 
 # Cleanup feature branch
-git branch -d "feature/user-profile-$(Get-Date -Format 'HHmm')"
-git push origin --delete "feature/user-profile-$(Get-Date -Format 'HHmm')"
+git branch -d "feature/user-profile-$(Get-Date -Format 'HH')"
+git push origin --delete "feature/user-profile-$(Get-Date -Format 'HH')"
 ```
 
 **📊 Expected Result in GitHub Actions:**
