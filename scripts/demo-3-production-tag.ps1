@@ -13,7 +13,10 @@ Write-Host "✅ On master branch, ready for production tagging" -ForegroundColor
 # Step 2: Create production-ready content
 Write-Host "`n📍 Step 2: Create production release documentation" -ForegroundColor Yellow
 $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-$version = "5.$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+
+
+$version = "v.$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+
 $prodTag = "v$version-production"
 $filename = "PRODUCTION-RELEASE-v$version-$(Get-Date -Format 'yyyyMMdd-HHmmss').md"
 
