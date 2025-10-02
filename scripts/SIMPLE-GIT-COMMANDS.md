@@ -42,8 +42,8 @@ git checkout development
 echo "Staging release candidate" > "staging-release.md"
 git add .
 git commit -m "milestone: Staging release preparation"
-git tag -a "v5.0-staging" -m "Staging milestone for validation"
-git push origin v5.0-staging
+git tag -a "v11.0-staging" -m "Staging milestone for validation"
+git push origin v11.0-staging
 ```
 **👀 Watch:** GitHub Actions → Staging Environment → Staging Tenant
 
@@ -55,8 +55,8 @@ git checkout master
 echo "Production release" > "prod-release.md"
 git add .
 git commit -m "release: Production deployment"
-git tag -a "v2.1" -m "Production release v2.1"
-git push origin v2.1
+git tag -a "v12.1" -m "Production release v12.1"
+git push origin v12.1
 ```
 **👀 Watch:** GitHub Actions → Production Environment → Production Tenant
 
