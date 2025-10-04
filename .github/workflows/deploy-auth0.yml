@@ -491,6 +491,7 @@ jobs:
           terraform output -no-color >> $GITHUB_STEP_SUMMARY || echo "No outputs available" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
+          
   # Create release tag for successful production deployments
   create-release-tag:
     name: 'Create Release Tag'
