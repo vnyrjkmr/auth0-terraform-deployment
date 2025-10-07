@@ -119,45 +119,45 @@ jobs:
             TF_VARS_FILE="config/prod.tfvars"
             SHOULD_DEPLOY="true"
             DEPLOYMENT_TYPE="release"
-            CREATE_TAG="true"  # Add this line
+            CREATE_TAG="true"
             
-          # Branch-based deployments
+          # Branch-based deployments - DISABLE ALL AUTOMATIC DEPLOYMENTS
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             case "${{ github.ref_name }}" in
               "main"|"master")
                 ENVIRONMENT="production"
                 TENANT="prod"
                 TF_VARS_FILE="config/prod.tfvars"
-                SHOULD_DEPLOY="true"
+                SHOULD_DEPLOY="false"  # Changed from "true" to "false"
                 DEPLOYMENT_TYPE="production"
-                CREATE_TAG="true"
+                CREATE_TAG="false"     # Changed from "true" to "false"
                 ;;
               "development")
                 ENVIRONMENT="development"
                 TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
-                SHOULD_DEPLOY="true"
+                SHOULD_DEPLOY="false"  # Already false, but making it explicit
                 DEPLOYMENT_TYPE="development"
                 ;;
               hotfix/*)
                 ENVIRONMENT="staging"
                 TENANT="staging"
                 TF_VARS_FILE="config/qa.tfvars"
-                SHOULD_DEPLOY="true"
+                SHOULD_DEPLOY="false"  # Changed from "true" to "false"
                 DEPLOYMENT_TYPE="hotfix"
                 ;;
               release/*)
                 ENVIRONMENT="staging"
                 TENANT="staging"
                 TF_VARS_FILE="config/qa.tfvars"
-                SHOULD_DEPLOY="true"
+                SHOULD_DEPLOY="false"  # Changed from "true" to "false"
                 DEPLOYMENT_TYPE="release"
                 ;;
               feature/*)
                 ENVIRONMENT="development"
                 TENANT="dev"
                 TF_VARS_FILE="config/dev.tfvars"
-                SHOULD_DEPLOY="false"
+                SHOULD_DEPLOY="false"  # Already false
                 DEPLOYMENT_TYPE="feature"
                 ;;
             esac
@@ -514,7 +514,7 @@ jobs:
     if: |
       needs.determine-strategy.outputs.create_tag == 'true' && 
       needs.terraform-apply.result == 'success' &&
-      needs.determine-strategy.outputs.deployment_type == 'production'
+      (needs.determine-strategy.outputs.deployment_type == 'production' || needs.determine-strategy.outputs.deployment_type == 'release')
     
     steps:
       - name: Checkout Repository
