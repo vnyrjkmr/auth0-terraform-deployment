@@ -3,12 +3,12 @@ name: Deploy Auth0 Infrastructure
 on:
   push:
     branches:
-      - main
-      - master
+      # Remove main and master from push triggers
       - development
       - 'feature/**'
       - 'hotfix/**'
       - 'release/**'
+      # main and master branches removed from here
     tags:
       - 'v*.*'
       - 'v*.*.*'
