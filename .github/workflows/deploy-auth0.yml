@@ -491,7 +491,20 @@ jobs:
           terraform output -no-color >> $GITHUB_STEP_SUMMARY || echo "No outputs available" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
-          
+  # Debug Release Tag Conditions
+  debug-conditions:
+    name: 'Debug Release Tag Conditions'
+    runs-on: ubuntu-latest
+    needs: [determine-strategy, terraform-apply]
+    if: needs.determine-strategy.outputs.should_deploy == 'true'
+    steps:
+      - name: Debug Values
+        run: |
+          echo "create_tag: '${{ needs.determine-strategy.outputs.create_tag }}'"
+          echo "terraform-apply result: '${{ needs.terraform-apply.result }}'"
+          echo "deployment_type: '${{ needs.determine-strategy.outputs.deployment_type }}'"
+          echo "Current branch: '${{ github.ref_name }}'"
+
   # Create release tag for successful production deployments
   create-release-tag:
     name: 'Create Release Tag'
